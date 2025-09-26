@@ -1,6 +1,6 @@
 package br.com.senai.senainotes.service;
 
-import br.com.senai.senainotes.models.Usuario;
+import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 

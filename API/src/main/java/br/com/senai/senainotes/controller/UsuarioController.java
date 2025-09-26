@@ -1,6 +1,6 @@
 package br.com.senai.senainotes.controller;
 
-import br.com.senai.senainotes.models.Usuario;
+import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
