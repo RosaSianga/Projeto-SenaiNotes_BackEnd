@@ -18,7 +18,7 @@ public class Anotacao {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario idUsuario;
+    private Usuario Usuario;
 
     @Column(name = "titulo", nullable = false, length = Integer.MAX_VALUE)
     private String titulo;
