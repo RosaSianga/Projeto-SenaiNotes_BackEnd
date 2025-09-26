@@ -1,4 +1,4 @@
-package br.com.senainotes.senainotes;
+package br.com.senai.senainotes.senainotes;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
