@@ -1,4 +1,4 @@
-package br.com.senainotes.models;
+package br.com.senai.senainotes.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
