@@ -25,14 +25,6 @@ public class UsuarioController {
         List<UsuarioListagemDto> usuarios = usuarioService.listarTodos();
         return ResponseEntity.ok(usuarios);
     }
-//
-//    @GetMapping
-//    public ResponseEntity<List<Usuario>> listarUsuarios() {
-//
-//        List<Usuario> usuario = usuarioService.listarUsuarios();
-//        return ResponseEntity.ok(usuario);
-//    }
-//
 
     @PostMapping("/{id}")
     public ResponseEntity<Usuario> cadastrarUsuario (@RequestBody Usuario usuario) {
@@ -43,25 +35,13 @@ public class UsuarioController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarId (@PathVariable  UsuarioListagemDto id) {
-        Usuario usuario = usuarioService.buscarPorId(id.getId());
-        return ResponseEntity.ok(usuario);
-
-
+    public ResponseEntity<UsuarioListagemDto> listarUsuariosPorId (@PathVariable Integer id) {
+        UsuarioListagemDto usuarios = usuarioService.buscarUsuarioPorId(id);
+        if (usuarios == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return  ResponseEntity.ok(usuarios);
     }
-
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<?> buscarPorId (@PathVariable Integer id) {
-//
-//        Usuario usuario = usuarioService.buscarPorId(id);
-//        if (usuario == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário " + id + " não encontrado !");
-//        }
-//
-//        return ResponseEntity.ok(usuario);
-//    }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarUsuario (@PathVariable Integer id) {

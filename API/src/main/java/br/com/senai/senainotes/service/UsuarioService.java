@@ -6,6 +6,7 @@ import br.com.senai.senainotes.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,21 +40,20 @@ public class UsuarioService {
         return dto;
     }
 
-    public Usuario cadastrarUsuario(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    public UsuarioListagemDto buscarUsuarioPorId (Integer id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        return converterParaListagemDTO(usuario);
     }
 
-    private UsuarioListagemDto buscarPorIdDTO(Integer id) {
-         Usuario usuario = usuarioRepository.findById(id).orElse(null);
-         return converterParaListagemDTO(usuario);
 
+    public Usuario cadastrarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
     }
 
 
     public Usuario buscarPorId (Integer id) {
         return usuarioRepository.findById(id).orElse(null);
     }
-
 
 
     public Usuario deletarUsuario (Integer id) {

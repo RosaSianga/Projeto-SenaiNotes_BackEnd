@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 public class UsuarioListagemDto {
+    private  Integer id;
     private String email;
     private OffsetDateTime dataCadastro;
-    private  Integer id;
 }
