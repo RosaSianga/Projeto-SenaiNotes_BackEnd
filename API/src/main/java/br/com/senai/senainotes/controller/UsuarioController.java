@@ -1,5 +1,6 @@
 package br.com.senai.senainotes.controller;
 
+import br.com.senai.senainotes.dto.UsuarioListagemDto;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.service.UsuarioService;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,20 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    // Dto Listar
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios() {
-
-        List<Usuario> usuario = usuarioService.listarUsuarios();
-        return ResponseEntity.ok(usuario);
+    public ResponseEntity<List<UsuarioListagemDto>> listar() {
+        List<UsuarioListagemDto> usuarios = usuarioService.listarTodos();
+        return ResponseEntity.ok(usuarios);
     }
-
+//
+//    @GetMapping
+//    public ResponseEntity<List<Usuario>> listarUsuarios() {
+//
+//        List<Usuario> usuario = usuarioService.listarUsuarios();
+//        return ResponseEntity.ok(usuario);
+//    }
+//
 
     @PostMapping("/{id}")
     public ResponseEntity<Usuario> cadastrarUsuario (@RequestBody Usuario usuario) {
@@ -35,15 +43,24 @@ public class UsuarioController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId (@PathVariable Integer id) {
-
-        Usuario usuario = usuarioService.buscarPorId(id);
-        if (usuario == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário " + id + " não encontrado !");
-        }
-
+    public ResponseEntity<?> buscarId (@PathVariable  UsuarioListagemDto id) {
+        Usuario usuario = usuarioService.buscarPorId(id.getId());
         return ResponseEntity.ok(usuario);
+
+
     }
+
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<?> buscarPorId (@PathVariable Integer id) {
+//
+//        Usuario usuario = usuarioService.buscarPorId(id);
+//        if (usuario == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário " + id + " não encontrado !");
+//        }
+//
+//        return ResponseEntity.ok(usuario);
+//    }
 
 
     @DeleteMapping("/{id}")

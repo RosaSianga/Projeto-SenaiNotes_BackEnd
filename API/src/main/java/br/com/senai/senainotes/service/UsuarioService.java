@@ -1,10 +1,12 @@
 package br.com.senai.senainotes.service;
 
+import br.com.senai.senainotes.dto.UsuarioListagemDto;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -20,15 +22,38 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    public List<UsuarioListagemDto> listarTodos() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarios.stream()
+                .map(this::converterParaListagemDTO)
+                .collect(Collectors.toList());
+    }
+
+    private UsuarioListagemDto converterParaListagemDTO(Usuario usuario) {
+        UsuarioListagemDto dto = new UsuarioListagemDto();
+
+        dto.setEmail(usuario.getEmail());
+        dto.setDataCadastro(usuario.getDataCadastro());
+        dto.setId(usuario.getId());
+
+        return dto;
+    }
 
     public Usuario cadastrarUsuario(Usuario usuario) {
         return usuarioRepository.save(usuario);
+    }
+
+    private UsuarioListagemDto buscarPorIdDTO(Integer id) {
+         Usuario usuario = usuarioRepository.findById(id).orElse(null);
+         return converterParaListagemDTO(usuario);
+
     }
 
 
     public Usuario buscarPorId (Integer id) {
         return usuarioRepository.findById(id).orElse(null);
     }
+
 
 
     public Usuario deletarUsuario (Integer id) {
@@ -56,3 +81,6 @@ public class UsuarioService {
         return usuarioRepository.save(usuarioAntigo);
     }
 }
+
+
+
