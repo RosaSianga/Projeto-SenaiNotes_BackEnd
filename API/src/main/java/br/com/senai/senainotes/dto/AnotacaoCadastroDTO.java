@@ -11,6 +11,5 @@ public class AnotacaoCadastroDTO {
     private String titulo;
     private String descricao;
     private String urlImagem;
-    private Boolean flagArquivado;
-}
+ }
 

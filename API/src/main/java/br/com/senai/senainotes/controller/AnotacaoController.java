@@ -1,9 +1,11 @@
 package br.com.senai.senainotes.controller;
 
+import br.com.senai.senainotes.dto.AnotacaoCadastroDTO;
 import br.com.senai.senainotes.dto.AnotacaoListagemDTO;
 import br.com.senai.senainotes.model.Anotacao;
 import br.com.senai.senainotes.service.AnotacaoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,19 +28,29 @@ public class AnotacaoController {
         return ResponseEntity.ok(anotacoes);
     }
 
+    @GetMapping("/{idUsuario}")
+    public ResponseEntity<List<AnotacaoListagemDTO>> listarAnotacoesPorUsuario(@PathVariable Integer idUsuario) {
+        List<AnotacaoListagemDTO> anotacoesUsuario = anotacaoService.listaTodasAnotacoesPorUsuario(idUsuario);
+        return ResponseEntity.ok(anotacoesUsuario);
+    }
 
-    @GetMapping("/id")
-    public ResponseEntity<AnotacaoListagemDTO> listarAnotacoesPorId(@PathVariable Integer id) {
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> listarAnotacoesPorId(@PathVariable Integer id) {
         AnotacaoListagemDTO anotacao = anotacaoService.buscarAnotacaoPorId(id);
         if (anotacao == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body("Anotação não encontrada");
         }
         return ResponseEntity.ok(anotacao);
     }
 
     @PostMapping
-    public ResponseEntity<AnotacaoListagemDTO> cadastrarAnotacao(@RequestBody Anotacao anotacao) {
-
+    public ResponseEntity<Anotacao> cadastrarAnotacao(@RequestBody AnotacaoCadastroDTO dto) {
+        Anotacao anotacao = anotacaoService.cadastrarAnotacao(dto);
+        if  (anotacao == null) {
+            return ResponseEntity.badRequest().body(anotacao);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(anotacao);
     }
 
 }
