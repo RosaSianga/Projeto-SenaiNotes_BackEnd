@@ -1,6 +1,7 @@
 package br.com.senai.senainotes.controller;
 
-import br.com.senai.senainotes.dto.CadastroDTO;
+import br.com.senai.senainotes.dto.login.CadastroUsuarioDTO;
+import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.service.UsuarioService;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class UsuarioController {
 
 
     @PostMapping("/{id}")
-    public ResponseEntity<Usuario> cadastrarUsuario (@RequestBody CadastroDTO usuario) {
+    public ResponseEntity<Usuario> cadastrarUsuario (@RequestBody CadastroUsuarioDTO usuario) {
 
         Usuario usuarioSalvo = usuarioService.criarUsuario(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
@@ -71,11 +72,15 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Usuario> alterarDarkMode (@PathVariable Integer id, @RequestBody Usuario novoDarkMode) {
+    @PutMapping("/config/{id}")
+    public ResponseEntity<Usuario> alterarDarkMode (@PathVariable Integer id, @RequestBody FlagDarkModeDTO novoDarkMode) {
 
-        Usuario atualMode = usuarioService.flagDarkMode(novoDarkMode);
-        return ResponseEntity.status(404).body(atualMode);
+        Usuario atualMode = usuarioService.alterarDarkMode(id, novoDarkMode);
+        if (atualMode == null) {
+            return null;
+        }
+
+        return ResponseEntity.ok(atualMode);
     }
 
 }

@@ -1,9 +1,9 @@
-package br.com.senai.senainotes.dto;
+package br.com.senai.senainotes.dto.login;
 
 import lombok.Data;
 
 @Data
-public class CadastroDTO {
+public class CadastroUsuarioDTO {
 
     private String email;
     private String senha;

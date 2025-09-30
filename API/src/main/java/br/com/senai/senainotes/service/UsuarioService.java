@@ -1,7 +1,7 @@
 package br.com.senai.senainotes.service;
 
-import br.com.senai.senainotes.dto.CadastroDTO;
-import br.com.senai.senainotes.dto.FlagDarkModeDTO;
+import br.com.senai.senainotes.dto.login.CadastroUsuarioDTO;
+import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class UsuarioService {
     }
 
 
-    public Usuario criarUsuario (CadastroDTO dto) {
+    public Usuario criarUsuario (CadastroUsuarioDTO dto) {
 
         Usuario novoUsuario = new Usuario();
 
@@ -66,16 +66,14 @@ public class UsuarioService {
     }
 
 
-    public Usuario flagDarkMode (FlagDarkModeDTO dto, Integer id) {
+    public Usuario alterarDarkMode (Integer id, FlagDarkModeDTO dto) {
 
-        Usuario modoDark = usuarioRepository.findById(dto.getId()).orElse(null);
+        Usuario modoDark = buscarPorId(id);
         if (modoDark == null) {
             return null;
         }
 
-        Usuario flag = new Usuario();
-
-        flag.setFlagDarkMode(dto.getFlagDarkMode());
-        return usuarioRepository.save(flag);
+        modoDark.setFlagDarkMode(dto.getFlagDarkMode());
+        return usuarioRepository.save(modoDark);
     }
 }
