@@ -1,12 +1,14 @@
 package br.com.senai.senainotes.service;
 
-import br.com.senai.senainotes.dto.AnotacaoArquivadaDTO;
-import br.com.senai.senainotes.dto.AnotacaoCadastroDTO;
-import br.com.senai.senainotes.dto.AnotacaoListagemDTO;
+import br.com.senai.senainotes.dto.anotacao.AnotacaoArquivadaDTO;
+import br.com.senai.senainotes.dto.anotacao.AnotacaoCadastroDTO;
+import br.com.senai.senainotes.dto.anotacao.AnotacaoListagemDTO;
+import br.com.senai.senainotes.dto.anotacao.AnotacaoListagemEmailDTO;
 import br.com.senai.senainotes.model.Anotacao;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.repository.AnotacaoRepository;
 import br.com.senai.senainotes.repository.UsuarioRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -26,7 +28,7 @@ public class AnotacaoService {
 
     //Busca as informações essenciais da lista de anotações
     public List<AnotacaoListagemDTO> listaTodasAnotacoes(){
-        List<Anotacao> anotacoes = anotacaoRepository.findAll();
+        List<Anotacao> anotacoes = anotacaoRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         return anotacoes.stream().map(this::converterListagem).
                 collect(Collectors.toList());
     }
@@ -46,6 +48,25 @@ public class AnotacaoService {
         dto.setUrlImagem(anotacao.getUrlImagem());
         dto.setFlagArquivado(anotacao.getFlagArquivado());
         dto.setIdUsuario(anotacao.getUsuario().getId());
+
+        return dto;
+    }
+
+    public List<AnotacaoListagemEmailDTO> listaTodasAnotacoesPorEmail(String email){
+        List<Anotacao> anotacoes = anotacaoRepository.findByUsuarioEmail(email);
+        return anotacoes.stream().map(this::converterListagemEmail).
+                collect(Collectors.toList());
+    }
+
+    public AnotacaoListagemEmailDTO converterListagemEmail(Anotacao anotacao){
+        AnotacaoListagemEmailDTO dto = new AnotacaoListagemEmailDTO();
+
+        dto.setIdAnotacao(anotacao.getId());
+        dto.setTitulo(anotacao.getTitulo());
+        dto.setDescricao(anotacao.getDescricao());
+        dto.setUrlImagem(anotacao.getUrlImagem());
+        dto.setFlagArquivado(anotacao.getFlagArquivado());
+        dto.setEmail(anotacao.getUsuario().getEmail());
 
         return dto;
     }

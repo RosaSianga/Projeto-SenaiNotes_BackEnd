@@ -1,10 +1,7 @@
-package br.com.senai.senainotes.dto;
+package br.com.senai.senainotes.dto.anotacao;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.OffsetDateTime;
 
 @Getter
 @Setter
