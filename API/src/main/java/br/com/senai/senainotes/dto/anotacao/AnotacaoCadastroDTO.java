@@ -3,6 +3,8 @@ package br.com.senai.senainotes.dto.anotacao;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 @Getter
 @Setter
 public class AnotacaoCadastroDTO {
@@ -11,5 +13,7 @@ public class AnotacaoCadastroDTO {
     private String titulo;
     private String descricao;
     private String urlImagem;
+    private ArrayList<String> tags;
+
  }
 

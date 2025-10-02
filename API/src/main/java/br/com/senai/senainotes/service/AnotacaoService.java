@@ -5,13 +5,16 @@ import br.com.senai.senainotes.dto.anotacao.AnotacaoCadastroDTO;
 import br.com.senai.senainotes.dto.anotacao.AnotacaoListagemDTO;
 import br.com.senai.senainotes.dto.anotacao.AnotacaoListagemEmailDTO;
 import br.com.senai.senainotes.model.Anotacao;
+import br.com.senai.senainotes.model.Tag;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.repository.AnotacaoRepository;
+import br.com.senai.senainotes.repository.TagRepository;
 import br.com.senai.senainotes.repository.UsuarioRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,10 +23,14 @@ public class AnotacaoService {
 
     private final AnotacaoRepository anotacaoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final TagRepository tagRepository;
+    private final TagService tagService;
 
-    public AnotacaoService(AnotacaoRepository repo, UsuarioRepository usuarioRepository) {
+    public AnotacaoService(AnotacaoRepository repo, UsuarioRepository usuarioRepository, TagRepository tagRepository, TagService tagService) {
         this.anotacaoRepository = repo;
         this.usuarioRepository = usuarioRepository;
+        this.tagRepository = tagRepository;
+        this.tagService = tagService;
     }
 
     //Busca as informações essenciais da lista de anotações
@@ -99,7 +106,22 @@ public class AnotacaoService {
         novaAnotacao.setUrlImagem(dto.getUrlImagem());
         novaAnotacao.setUsuario(usuarioAssociado);
 
-        return anotacaoRepository.save(novaAnotacao);
+        Anotacao a = anotacaoRepository.save(novaAnotacao);
+
+//Consultar se a Tag existe para recuperar o id ou criar nova
+
+        for (int i = 0; i < dto.getTags().size(); i++) {
+
+            br.com.senai.senainotes.model.Tag tag = tagRepository.findByNome(dto.getTags().get(i));
+            if (tag == null) {
+                Tag t = tagService.cadastrarTag(tag);
+            } else {
+                // cadastrar a tabela itermediaria com o tag.ig e a.id
+            }
+        }
+
+
+        return novaAnotacao;
     }
 
 
