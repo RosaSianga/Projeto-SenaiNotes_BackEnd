@@ -1,5 +1,6 @@
 package br.com.senai.senainotes.controller;
 
+import br.com.senai.senainotes.dto.TagListagemDTO;
 import br.com.senai.senainotes.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,8 +25,8 @@ public class TagController {
     @GetMapping
     @Operation(summary = "Lista todos as Tags", description = "Retorna uma lista com todas as tags cadastradas")
     @ApiResponse(responseCode = "200", description = "Operacao bem-sucedida")
-    public ResponseEntity<List<br.com.senai.senainotes.model.Tag>> ListarTags() {
-        List<br.com.senai.senainotes.model.Tag> tags = tagService.listarTags();
+    public ResponseEntity<List<TagListagemDTO>> ListarTags() {
+        List<TagListagemDTO> tags = tagService.listarTags();
         return ResponseEntity.ok().body(tags);
     }
 
@@ -36,11 +37,11 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "Tag encontrado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Tag nao encontrado para o ID informado")
     })
-    public ResponseEntity<?> buscarTagPorId(@PathVariable Integer id) {
-        br.com.senai.senainotes.model.Tag tag = tagService.buscarTagPorId(id);
+    public ResponseEntity<TagListagemDTO> buscarTagPorId(@PathVariable Integer id) {
+        TagListagemDTO tag = tagService.buscarTagPorId(id);
 
         if (tag == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tag não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(tag);
     }

@@ -1,11 +1,13 @@
 package br.com.senai.senainotes.service;
 
+import br.com.senai.senainotes.dto.TagListagemDTO;
 import br.com.senai.senainotes.model.Tag;
 import br.com.senai.senainotes.repository.TagRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TagService {
@@ -15,9 +17,23 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
+
+
     // Listar
-    public List<Tag> listarTags() {
-        return tagRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    public List<TagListagemDTO> listarTags() {
+        List<Tag> tags = tagRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        return tags.stream()
+                .map(this::converterParaListagemDto)
+                .collect(Collectors.toList());
+    }
+
+    // Convertendo para Dto
+    private TagListagemDTO converterParaListagemDto(Tag tag) {
+        TagListagemDTO dto = new TagListagemDTO();
+
+        dto.setId(tag.getId());
+        dto.setNome(tag.getNome());
+        return dto;
     }
 
     // Cadastrar
@@ -25,14 +41,20 @@ public class TagService {
         return tagRepository.save(tag);
     }
 
+    // Buscar tag por ID
+    public TagListagemDTO buscarTagPorId(Integer id) {
+        Tag tag = tagRepository.findById(id).orElse(null);
+        return converterParaListagemDto(tag);
+    }
+
     // Buscar
-    public Tag buscarTagPorId(Integer id) {
+    public  Tag buscarPorId(Integer id) {
         return tagRepository.findById(id).orElse(null);
     }
 
     // Deletar
     public Tag deletarTag(Integer id) {
-        Tag tag = buscarTagPorId(id);
+        Tag tag = buscarPorId(id);
 
         if (tag == null) {
             return null;
@@ -43,7 +65,7 @@ public class TagService {
 
     // Atualizar
     public Tag atualizaTag(Integer id, Tag tagNova) {
-        Tag tagAntiga = buscarTagPorId(id);
+        Tag tagAntiga = buscarPorId(id);
 
         if (tagAntiga == null) {
             return null;
