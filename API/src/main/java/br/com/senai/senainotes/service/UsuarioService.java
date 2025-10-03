@@ -29,11 +29,14 @@ public class UsuarioService {
 
     public Usuario criarUsuario (CadastroUsuarioDTO dto) {
 
-        Usuario novoUsuario = new Usuario();
+        String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
+        dto.setSenha(senhaCriptografada);
 
+        Usuario novoUsuario = new Usuario();
         novoUsuario.setEmail(dto.getEmail());
         novoUsuario.setSenha(dto.getSenha());
         novoUsuario.setDataCadastro(OffsetDateTime.now());
+
         return usuarioRepository.save(novoUsuario);
     }
 
