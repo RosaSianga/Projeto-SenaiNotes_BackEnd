@@ -1,6 +1,6 @@
 package br.com.senai.senainotes.service;
 
-import br.com.senai.senainotes.dto.login.CadastroUsuarioDTO;
+import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.repository.UsuarioRepository;
@@ -27,7 +27,7 @@ public class UsuarioService {
     }
 
 
-    public Usuario criarUsuario (CadastroUsuarioDTO dto) {
+    public Usuario criarUsuario (LoginDTO dto) {
 
         String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
         dto.setSenha(senhaCriptografada);

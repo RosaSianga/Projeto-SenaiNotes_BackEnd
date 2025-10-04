@@ -1,6 +1,7 @@
 package br.com.senai.senainotes.controller;
 
-import br.com.senai.senainotes.dto.login.CadastroUsuarioDTO;
+import br.com.senai.senainotes.dto.login.LoginDTO;
+import br.com.senai.senainotes.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,23 +19,25 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 
 @RestController
-@RequestMapping("/api/cadastro")
-public class CadastroUsuarioController {
+@RequestMapping("/api/login")
+public class LoginController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtEncoder jwtEncoder;
+    private final UsuarioService usuarioService;
 
-    public CadastroUsuarioController(AuthenticationManager authenticationManager, JwtEncoder jwtEncoder) {
+    public LoginController(AuthenticationManager authenticationManager, JwtEncoder jwtEncoder, UsuarioService usuarioService) {
         this.authenticationManager = authenticationManager;
         this.jwtEncoder = jwtEncoder;
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping
-    public ResponseEntity<?> cadastro (@RequestBody CadastroUsuarioDTO cadastroUsuarioDTO) {
+    public ResponseEntity<?> login (@RequestBody LoginDTO cadastroUsuarioDTO) {
 
         var cadastroToken= new UsernamePasswordAuthenticationToken(cadastroUsuarioDTO.getEmail(), cadastroUsuarioDTO.getSenha());
 
-        Authentication cadastro = authenticationManager.authenticate(cadastroToken);
+        Authentication login = authenticationManager.authenticate(cadastroToken);
 
         Instant now = Instant.now();
         long validade = 3600L;
@@ -44,8 +47,8 @@ public class CadastroUsuarioController {
                 .issuer("senainotes-api")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(validade))
-                .subject(cadastro.getName())
-                .claim("roles", cadastro.getAuthorities())
+                .subject(login.getName())
+                .claim("roles", login.getAuthorities())
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(MacAlgorithm.HS256).build();
