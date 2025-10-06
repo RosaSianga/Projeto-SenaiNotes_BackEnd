@@ -1,16 +1,16 @@
-package br.com.senai.senainotes.dto;
+package br.com.senai.senainotes.dto.anotacao;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class AnotacaoCadastroDTO {
+public class AnotacaoListagemEmailDTO {
 
-    private Integer idUsuario;
+    private Integer idAnotacao;
     private String titulo;
     private String descricao;
     private String urlImagem;
     private Boolean flagArquivado;
+    private String email;
 }
-
