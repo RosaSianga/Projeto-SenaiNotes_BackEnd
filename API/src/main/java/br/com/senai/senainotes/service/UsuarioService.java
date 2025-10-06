@@ -1,5 +1,6 @@
 package br.com.senai.senainotes.service;
 
+import br.com.senai.senainotes.dto.UsuarioListagemDto;
 import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -24,6 +27,28 @@ public class UsuarioService {
 
     public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
+    }
+
+    public List<UsuarioListagemDto> listarTodos() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarios.stream()
+                .map(this::converterParaListagemDTO)
+                .collect(Collectors.toList());
+    }
+
+    private UsuarioListagemDto converterParaListagemDTO(Usuario usuario) {
+        UsuarioListagemDto dto = new UsuarioListagemDto();
+
+        dto.setEmail(usuario.getEmail());
+        dto.setDataCadastro(usuario.getDataCadastro());
+        dto.setId(usuario.getId());
+
+        return dto;
+    }
+
+    public UsuarioListagemDto buscarUsuarioPorId (Integer id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        return converterParaListagemDTO(usuario);
     }
 
 
@@ -83,3 +108,6 @@ public class UsuarioService {
         return usuarioRepository.save(modoDark);
     }
 }
+
+
+

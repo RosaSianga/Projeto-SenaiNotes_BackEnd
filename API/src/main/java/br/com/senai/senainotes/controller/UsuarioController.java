@@ -1,5 +1,6 @@
 package br.com.senai.senainotes.controller;
 
+import br.com.senai.senainotes.dto.UsuarioListagemDto;
 import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
@@ -22,6 +23,16 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    // Dto Listar
+    @GetMapping
+    public ResponseEntity<List<UsuarioListagemDto>> listar() {
+        List<UsuarioListagemDto> usuarios = usuarioService.listarTodos();
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Usuario> cadastrarUsuario (@RequestBody Usuario usuario) {
+
     @GetMapping("/listar{id}")
     public ResponseEntity<List<Usuario>> listarUsuarios() {
 
@@ -37,7 +48,12 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
     }
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioListagemDto> listarUsuariosPorId (@PathVariable Integer id) {
+        UsuarioListagemDto usuarios = usuarioService.buscarUsuarioPorId(id);
+        if (usuarios == null) {
+            return ResponseEntity.notFound().build();
+          
     @GetMapping("/buscar{id}")
     public ResponseEntity<?> buscarPorId (@PathVariable Integer id) {
 
@@ -45,8 +61,7 @@ public class UsuarioController {
         if (usuario == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário " + id + " não encontrado !");
         }
-
-        return ResponseEntity.ok(usuario);
+        return  ResponseEntity.ok(usuarios);
     }
 
 
