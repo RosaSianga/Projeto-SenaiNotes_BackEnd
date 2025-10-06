@@ -1,4 +1,4 @@
-package br.com.senainotes.models;
+package br.com.senai.senainotes.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class Anotacao {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario idUsuario;
+    private Usuario usuario;
 
     @Column(name = "titulo", nullable = false, length = Integer.MAX_VALUE)
     private String titulo;
