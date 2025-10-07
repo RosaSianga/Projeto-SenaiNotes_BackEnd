@@ -71,6 +71,9 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/cadastro/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/usuario/**").permitAll()
+                        .requestMatchers("/api/login/**").permitAll()
+                        .requestMatchers("/api/anotacao/**").permitAll()
+                        .requestMatchers("/api/tags/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

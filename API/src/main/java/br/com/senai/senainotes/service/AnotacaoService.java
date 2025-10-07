@@ -4,6 +4,7 @@ import br.com.senai.senainotes.dto.anotacao.AnotacaoArquivadaDTO;
 import br.com.senai.senainotes.dto.anotacao.AnotacaoCadastroDTO;
 import br.com.senai.senainotes.dto.anotacao.AnotacaoListagemDTO;
 import br.com.senai.senainotes.dto.anotacao.AnotacaoListagemEmailDTO;
+import br.com.senai.senainotes.dto.tag.TagListagemDTO;
 import br.com.senai.senainotes.model.Anotacao;
 import br.com.senai.senainotes.model.Nota;
 import br.com.senai.senainotes.model.Tag;
@@ -76,7 +77,24 @@ public class AnotacaoService {
         dto.setDescricao(anotacao.getDescricao());
         dto.setUrlImagem(anotacao.getUrlImagem());
         dto.setFlagArquivado(anotacao.getFlagArquivado());
+        dto.setIdUsuario(anotacao.getUsuario().getId());
         dto.setEmail(anotacao.getUsuario().getEmail());
+
+        List<TagListagemDTO> tagsDto = anotacao.getTagAnotacao().stream()
+                .map(associacao -> converterTagParaDTO(associacao.getIdTag()))
+                .collect(Collectors.toList());
+
+        dto.setTags(tagsDto);
+
+        return dto;
+    }
+
+    private TagListagemDTO converterTagParaDTO(Tag tag) {
+
+        TagListagemDTO dto = new TagListagemDTO();
+
+        dto.setId(tag.getId());
+        dto.setNome(tag.getNome());
 
         return dto;
     }
@@ -111,7 +129,7 @@ public class AnotacaoService {
 
         Anotacao anotacao = anotacaoRepository.save(novaAnotacao);
 
-//Consultar se a Tag existe para recuperar o id ou criar nova
+    //Consultar se a Tag existe para recuperar o id ou criar nova
 
         for (int i = 0; i < dto.getTags().size(); i++) {
 
@@ -119,8 +137,7 @@ public class AnotacaoService {
             if (tag == null) {
                 Tag novaTag = new Tag();
                 novaTag.setNome(dto.getTags().get(i));
-                tagService.cadastrarTag(novaTag);
-                tag.setId(novaTag.getId());
+                tag = tagService.cadastrarTag(novaTag);
             }
 
             // cadastrar a tabela itermediaria com o tag.ig e a.id

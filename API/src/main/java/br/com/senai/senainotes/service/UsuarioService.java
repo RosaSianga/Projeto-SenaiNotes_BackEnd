@@ -1,6 +1,6 @@
 package br.com.senai.senainotes.service;
 
-import br.com.senai.senainotes.dto.UsuarioListagemDto;
+import br.com.senai.senainotes.dto.usuario.UsuarioListagemDto;
 import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

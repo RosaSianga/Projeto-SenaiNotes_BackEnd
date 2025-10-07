@@ -1,6 +1,6 @@
 package br.com.senai.senainotes.controller;
 
-import br.com.senai.senainotes.dto.UsuarioListagemDto;
+import br.com.senai.senainotes.dto.usuario.UsuarioListagemDto;
 import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
@@ -30,9 +30,6 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarios);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Usuario> cadastrarUsuario (@RequestBody Usuario usuario) {
-
     @GetMapping("/listar{id}")
     public ResponseEntity<List<Usuario>> listarUsuarios() {
 
@@ -53,13 +50,7 @@ public class UsuarioController {
         UsuarioListagemDto usuarios = usuarioService.buscarUsuarioPorId(id);
         if (usuarios == null) {
             return ResponseEntity.notFound().build();
-          
-    @GetMapping("/buscar{id}")
-    public ResponseEntity<?> buscarPorId (@PathVariable Integer id) {
 
-        Usuario usuario = usuarioService.buscarPorId(id);
-        if (usuario == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário " + id + " não encontrado !");
         }
         return  ResponseEntity.ok(usuarios);
     }

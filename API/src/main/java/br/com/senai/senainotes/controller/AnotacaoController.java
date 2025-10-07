@@ -34,7 +34,7 @@ public class AnotacaoController {
         return ResponseEntity.ok(anotacoes);
     }
 
-    @GetMapping("/porUsuario/{idUsuario}")
+    @GetMapping("/consultaPorUsuario/{idUsuario}")
     @Operation(
             summary = "Listar as anotações pelo ID usuário"
     )
@@ -43,7 +43,7 @@ public class AnotacaoController {
         return ResponseEntity.ok(anotacoesUsuario);
     }
 
-    @GetMapping("/porEmail/{email}")
+    @GetMapping("/consultaPorEmail/{email}")
     @Operation(
             summary = "Listar as anotações pelo Email"
     )
@@ -53,7 +53,7 @@ public class AnotacaoController {
     }
 
 
-    @GetMapping("/porId/{idNota}")
+    @GetMapping("/consultaPorId/{idNota}")
     @Operation(
             summary = "Lista a anotação pelo ID da nota"
     )
