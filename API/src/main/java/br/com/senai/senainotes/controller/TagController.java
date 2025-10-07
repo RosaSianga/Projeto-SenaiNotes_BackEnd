@@ -5,6 +5,7 @@ import br.com.senai.senainotes.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Tags", description = "Operações relacionadas as tags")
 public class TagController {
     private TagService tagService;

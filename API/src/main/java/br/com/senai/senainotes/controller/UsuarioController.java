@@ -5,7 +5,9 @@ import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/usuario")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Usuário", description = "Operações relacionadas ao usuário")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -23,6 +26,7 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+
     // Dto Listar
     @GetMapping
     public ResponseEntity<List<UsuarioListagemDto>> listar() {
@@ -30,10 +34,9 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarios);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Usuario> cadastrarUsuario (@RequestBody Usuario usuario) {
 
-    @GetMapping("/listar{id}")
+    @GetMapping("/listar")
+    @Operation( summary = "Listar todos os usuários do sistema")
     public ResponseEntity<List<Usuario>> listarUsuarios() {
 
         List<Usuario> usuario = usuarioService.listarUsuarios();
@@ -42,30 +45,27 @@ public class UsuarioController {
 
 
     @PostMapping("/cadastrar")
+    @Operation( summary = "Cadastrar um usuário no sistema")
     public ResponseEntity<Usuario> cadastrarUsuario (@RequestBody LoginDTO usuario) {
 
         Usuario usuarioSalvo = usuarioService.criarUsuario(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
     }
 
+
     @GetMapping("/{id}")
+    @Operation( summary = "Pesquisar o usuário por ID")
     public ResponseEntity<UsuarioListagemDto> listarUsuariosPorId (@PathVariable Integer id) {
         UsuarioListagemDto usuarios = usuarioService.buscarUsuarioPorId(id);
         if (usuarios == null) {
             return ResponseEntity.notFound().build();
-          
-    @GetMapping("/buscar{id}")
-    public ResponseEntity<?> buscarPorId (@PathVariable Integer id) {
-
-        Usuario usuario = usuarioService.buscarPorId(id);
-        if (usuario == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário " + id + " não encontrado !");
         }
         return  ResponseEntity.ok(usuarios);
     }
 
 
-    @DeleteMapping("/deletar{id}")
+    @DeleteMapping("/deletar")
+    @Operation( summary = "Deletar o usuário do sistema")
     public ResponseEntity<?> deletarUsuario (@PathVariable Integer id) {
 
         Usuario usuario = usuarioService.deletarUsurio(id);
@@ -77,7 +77,8 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/atualizar{id}")
+    @PutMapping("/atualizar")
+    @Operation( summary = "Atualizar dados do usuário no sistema")
     public ResponseEntity<?> atualizarUsuario (@PathVariable Integer id, @RequestBody Usuario usuarioNovo) {
 
         Usuario usuarioAntigo = usuarioService.atualizarUsuario(id, usuarioNovo);
@@ -89,7 +90,8 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/config{id}")
+    @PutMapping("/darkmode")
+    @Operation( summary = "Alterar modo de visualização do usuário no sistema (modo escuro)")
     public ResponseEntity<Usuario> alterarDarkMode (@PathVariable Integer id, @RequestBody FlagDarkModeDTO novoDarkMode) {
 
         Usuario atualMode = usuarioService.alterarDarkMode(id, novoDarkMode);

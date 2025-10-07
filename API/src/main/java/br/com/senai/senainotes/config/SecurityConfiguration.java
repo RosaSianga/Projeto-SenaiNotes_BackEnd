@@ -1,7 +1,6 @@
 package br.com.senai.senainotes.config;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -65,12 +64,16 @@ public class SecurityConfiguration {
         http
 
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/cadastro/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/usuario/**").permitAll()
+                        .requestMatchers("/api/usuario/**").authenticated()
+                        .requestMatchers("/api/tags/**").authenticated()
+                        .requestMatchers("/api/anotacao/**").authenticated()
+                        .requestMatchers("/api/login/**").authenticated()
                         .anyRequest().authenticated()
                 )
 
