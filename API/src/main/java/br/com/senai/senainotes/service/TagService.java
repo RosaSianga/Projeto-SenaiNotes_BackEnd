@@ -1,6 +1,6 @@
 package br.com.senai.senainotes.service;
 
-import br.com.senai.senainotes.dto.TagListagemDTO;
+import br.com.senai.senainotes.dto.tag.TagListagemDTO;
 import br.com.senai.senainotes.model.Tag;
 import br.com.senai.senainotes.repository.TagRepository;
 import org.springframework.data.domain.Sort;
