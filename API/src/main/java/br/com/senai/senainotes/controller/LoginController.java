@@ -2,6 +2,8 @@ package br.com.senai.senainotes.controller;
 
 import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +22,7 @@ import java.time.Instant;
 
 @RestController
 @RequestMapping("/api/login")
+@Tag(name = "Login do Usuário", description = "Operações relacionadas a login")
 public class LoginController {
 
     private final AuthenticationManager authenticationManager;
@@ -33,6 +36,7 @@ public class LoginController {
     }
 
     @PostMapping
+    @Operation(summary = "Realizar login do usuário")
     public ResponseEntity<?> login (@RequestBody LoginDTO cadastroUsuarioDTO) {
 
         var cadastroToken= new UsernamePasswordAuthenticationToken(cadastroUsuarioDTO.getEmail(), cadastroUsuarioDTO.getSenha());
