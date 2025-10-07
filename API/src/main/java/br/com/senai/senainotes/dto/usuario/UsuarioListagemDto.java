@@ -1,4 +1,4 @@
-package br.com.senai.senainotes.dto;
+package br.com.senai.senainotes.dto.usuario;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package br.com.senai.senainotes.controller;
 
-import br.com.senai.senainotes.dto.TagListagemDTO;
+import br.com.senai.senainotes.dto.tag.TagListagemDTO;
 import br.com.senai.senainotes.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
