@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +21,9 @@ public class Anotacao {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "idAnotacao", fetch =  FetchType.LAZY)
+    private List<Nota> tagAnotacao = new ArrayList<>();
 
     @Column(name = "titulo", nullable = false, length = Integer.MAX_VALUE)
     private String titulo;
@@ -37,5 +42,7 @@ public class Anotacao {
 
     @Column(name = "flag_arquivado")
     private Boolean flagArquivado;
+
+
 
 }

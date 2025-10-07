@@ -7,6 +7,7 @@ import br.com.senai.senainotes.dto.anotacao.AnotacaoListagemEmailDTO;
 import br.com.senai.senainotes.model.Anotacao;
 import br.com.senai.senainotes.service.AnotacaoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/anotacao")
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Controle de Anotações", description = "Operações relacionadas a anotações")
 public class AnotacaoController {
 
@@ -34,7 +36,7 @@ public class AnotacaoController {
         return ResponseEntity.ok(anotacoes);
     }
 
-    @GetMapping("/porUsuario/{idUsuario}")
+    @GetMapping("/consultaPorUsuario/{idUsuario}")
     @Operation(
             summary = "Listar as anotações pelo ID usuário"
     )
@@ -43,7 +45,7 @@ public class AnotacaoController {
         return ResponseEntity.ok(anotacoesUsuario);
     }
 
-    @GetMapping("/porEmail/{email}")
+    @GetMapping("/consultaPorEmail/{email}")
     @Operation(
             summary = "Listar as anotações pelo Email"
     )
@@ -53,7 +55,7 @@ public class AnotacaoController {
     }
 
 
-    @GetMapping("/porId/{idNota}")
+    @GetMapping("/consultaPorId/{idNota}")
     @Operation(
             summary = "Lista a anotação pelo ID da nota"
     )
