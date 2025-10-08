@@ -19,4 +19,7 @@ public class AnotacaoListagemEmailDTO {
     private Integer idUsuario;
     private String email;
     private List<TagListagemDTO> tags;
+    private Integer id_tags;
+    private String nome_tags;
+    private String usuario;
 }
