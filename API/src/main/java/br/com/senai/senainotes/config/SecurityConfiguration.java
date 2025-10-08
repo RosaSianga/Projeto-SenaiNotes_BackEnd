@@ -1,8 +1,10 @@
 package br.com.senai.senainotes.config;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -25,14 +27,16 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private String secret = "}]0Gnq|maxtXoU4$KI-,_aL5g5BCmJ]K$/YXlQv7QJtk6d.VD,";
+    @Value("${api.jwt.secret}")
+
+    private String jwtSecret;
 
 
     //1. GERADOR DE TOKENS
     @Bean
     public JwtEncoder jwtEncoder() {
 
-        var secretKey = new SecretKeySpec(secret.getBytes(), "AES");
+        var secretKey = new SecretKeySpec(jwtSecret.getBytes(), "AES");
         return new NimbusJwtEncoder(new ImmutableSecret<>(secretKey));
     }
 
@@ -40,7 +44,7 @@ public class SecurityConfiguration {
     @Bean
     public JwtDecoder jwtDecoder() {
 
-        var secretKey = new SecretKeySpec(secret.getBytes(), "AES");
+        var secretKey = new SecretKeySpec(jwtSecret.getBytes(), "AES");
         return NimbusJwtDecoder.withSecretKey(secretKey).macAlgorithm(MacAlgorithm.HS256).build();
     }
 
@@ -68,12 +72,9 @@ public class SecurityConfiguration {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/cadastro/**").permitAll()
+                        .requestMatchers(HttpMethod.POST ,"/api/usuario/cadastrar/**").permitAll()
+                        .requestMatchers(HttpMethod.POST ,"/api/login/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/usuario/**").authenticated()
-                        .requestMatchers("/api/tags/**").authenticated()
-                        .requestMatchers("/api/anotacao/**").authenticated()
-                        .requestMatchers("/api/login/**").authenticated()
                         .anyRequest().authenticated()
                 )
 
