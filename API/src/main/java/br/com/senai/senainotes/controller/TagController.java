@@ -105,9 +105,13 @@ public class TagController {
     }
 
     // Por Email
-    @GetMapping("/{email}")
+    @GetMapping("/consultaPorEmail/{email}")
     public ResponseEntity<List<AnotacaoListagemEmailDTO>> buscarTagPorEmail(@PathVariable String email) {
-        List<AnotacaoListagemEmailDTO> tagsEmail = tagService.listarTagsPorEmail(email);
-        return ResponseEntity.ok(tagsEmail);
+        if (email == null || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<TagListagemDTO> tags = tagService.listarTagsPorEmail(email);
+        return ResponseEntity.ok()
     }
 }

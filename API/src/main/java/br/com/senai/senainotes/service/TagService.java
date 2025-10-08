@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,21 +81,44 @@ public class TagService {
     }
 
     // Por Email
-    public List<AnotacaoListagemEmailDTO> listarTagsPorEmail(String email) {
+    public List<TagListagemDTO> listarTagsPorEmail(String email) {
         List<Anotacao> anotacaos = anotacaoRepository.findByUsuarioEmail(email);
-        return anotacaos.stream().map(this::converterListagemEmail)
+
+        Set<Tag> todasTags = anotacaos.stream()
+                .flatMap(anotacao -> anotacao.getTagAnotacao().stream())
+                .map(associacao -> associacao.getIdTag())
+                .collect(Collectors.toSet());
+
+        return  todasTags.stream()
+                .map(this::converterTagParaDTO)
                 .collect(Collectors.toList());
     }
 
     public AnotacaoListagemEmailDTO converterListagemEmail(Anotacao anotacao) {
         AnotacaoListagemEmailDTO dto = new AnotacaoListagemEmailDTO();
 
-        dto.setId_tags(anotacao.getId());
-        dto.setNome_tags(anotacao.getTitulo());
+
         dto.setEmail(anotacao.getUsuario().getEmail());
 
+        List<TagListagemDTO> tagsDto = anotacao.getTagAnotacao().stream()
+                .map(associacao -> converterTagParaDTO(associacao.getIdTag()))
+                .collect(Collectors.toList());
+
+        dto.setTags(tagsDto);
+
         return dto;
-
-
     }
+
+        private TagListagemDTO converterTagParaDTO(Tag tag) {
+
+            TagListagemDTO dto = new TagListagemDTO();
+
+            dto.setId(tag.getId());
+            dto.setNome(tag.getNome());
+
+            return dto;
+        }
+
+
+
 }
