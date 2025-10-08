@@ -1,7 +1,10 @@
 package br.com.senai.senainotes.service;
 
+import br.com.senai.senainotes.dto.anotacao.AnotacaoListagemEmailDTO;
 import br.com.senai.senainotes.dto.tag.TagListagemDTO;
+import br.com.senai.senainotes.model.Anotacao;
 import br.com.senai.senainotes.model.Tag;
+import br.com.senai.senainotes.repository.AnotacaoRepository;
 import br.com.senai.senainotes.repository.TagRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -12,9 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class TagService {
     private final TagRepository tagRepository;
+    private final AnotacaoRepository anotacaoRepository;
 
-    public TagService(TagRepository tagRepository) {
+    public TagService(TagRepository tagRepository, AnotacaoRepository anotacaoRepository) {
         this.tagRepository = tagRepository;
+        this.anotacaoRepository = anotacaoRepository;
     }
 
 
@@ -72,5 +77,24 @@ public class TagService {
         }
         tagAntiga.setNome(tagNova.getNome());
         return tagRepository.save(tagAntiga);
+    }
+
+    // Por Email
+    public List<AnotacaoListagemEmailDTO> listarTagsPorEmail(String email) {
+        List<Anotacao> anotacaos = anotacaoRepository.findByUsuarioEmail(email);
+        return anotacaos.stream().map(this::converterListagemEmail)
+                .collect(Collectors.toList());
+    }
+
+    public AnotacaoListagemEmailDTO converterListagemEmail(Anotacao anotacao) {
+        AnotacaoListagemEmailDTO dto = new AnotacaoListagemEmailDTO();
+
+        dto.setId_tags(anotacao.getId());
+        dto.setNome_tags(anotacao.getTitulo());
+        dto.setEmail(anotacao.getUsuario().getEmail());
+
+        return dto;
+
+
     }
 }

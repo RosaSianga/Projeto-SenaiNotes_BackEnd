@@ -1,6 +1,10 @@
 package br.com.senai.senainotes.controller;
 
+import br.com.senai.senainotes.dto.anotacao.AnotacaoListagemEmailDTO;
 import br.com.senai.senainotes.dto.tag.TagListagemDTO;
+import br.com.senai.senainotes.model.Anotacao;
+import br.com.senai.senainotes.repository.AnotacaoRepository;
+import br.com.senai.senainotes.service.AnotacaoService;
 import br.com.senai.senainotes.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,9 +22,13 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Tags", description = "Operações relacionadas as tags")
 public class TagController {
+    private final AnotacaoRepository anotacaoRepository;
+    private final AnotacaoService anotacaoService;
     private TagService tagService;
-    public TagController(TagService tagService) {
+    public TagController(TagService tagService, AnotacaoRepository anotacaoRepository, AnotacaoService anotacaoService) {
         this.tagService = tagService;
+        this.anotacaoRepository = anotacaoRepository;
+        this.anotacaoService = anotacaoService;
     }
 
     // Listar
@@ -94,5 +102,12 @@ public class TagController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possivel excluir, pois a tag não foi encontrado");
         }
         return ResponseEntity.ok("Tag deletado com sucesso");
+    }
+
+    // Por Email
+    @GetMapping("/{email}")
+    public ResponseEntity<List<AnotacaoListagemEmailDTO>> buscarTagPorEmail(@PathVariable String email) {
+        List<AnotacaoListagemEmailDTO> tagsEmail = tagService.listarTagsPorEmail(email);
+        return ResponseEntity.ok(tagsEmail);
     }
 }
