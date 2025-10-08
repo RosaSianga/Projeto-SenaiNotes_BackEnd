@@ -112,6 +112,6 @@ public class TagController {
         }
 
         List<TagListagemDTO> tags = tagService.listarTagsPorEmail(email);
-        return ResponseEntity.ok()
+        return ResponseEntity.ok().build();
     }
 }
