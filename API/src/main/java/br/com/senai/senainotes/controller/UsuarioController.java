@@ -1,5 +1,6 @@
 package br.com.senai.senainotes.controller;
 
+import br.com.senai.senainotes.dto.usuario.ResetarSenhaDTO;
 import br.com.senai.senainotes.dto.usuario.UsuarioListagemDto;
 import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
@@ -29,21 +30,12 @@ public class UsuarioController {
 
 
     // Dto Listar
-    @GetMapping
+    @GetMapping("/listar")
+    @Operation( summary = "Listar todos os usuários do sistema")
     public ResponseEntity<List<UsuarioListagemDto>> listar() {
         List<UsuarioListagemDto> usuarios = usuarioService.listarTodos();
         return ResponseEntity.ok(usuarios);
     }
-
-
-    @GetMapping("/listar")
-    @Operation( summary = "Listar todos os usuários do sistema")
-    public ResponseEntity<List<Usuario>> listarUsuarios() {
-
-        List<Usuario> usuario = usuarioService.listarUsuarios();
-        return ResponseEntity.ok(usuario);
-    }
-
 
     @PostMapping("/cadastrar")
     @Operation( summary = "Cadastrar um usuário no sistema")
@@ -101,6 +93,12 @@ public class UsuarioController {
         }
 
         return ResponseEntity.ok(atualMode);
+    }
+
+    @PostMapping("/recuperar-senha")
+    public ResponseEntity<String> forgotPassword(@Valid @RequestBody ResetarSenhaDTO resetarSenhaDTO) {
+        usuarioService.recuperarSenha(resetarSenhaDTO.getEmail());
+        return ResponseEntity.ok("Se um usuário com este e-mail existir, uma nova senha será enviada.");
     }
 
 }

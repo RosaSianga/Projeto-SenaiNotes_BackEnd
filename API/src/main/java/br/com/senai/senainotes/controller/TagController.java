@@ -106,6 +106,7 @@ public class TagController {
 
     // Por Email
     @GetMapping("/consultaPorEmail/{email}")
+    @Operation(summary = "Consultar as tags por Email", description = "Demostrar todas as tags por Email.")
     public ResponseEntity<List<AnotacaoListagemEmailDTO>> buscarTagPorEmail(@PathVariable String email) {
         if (email == null || email.trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
