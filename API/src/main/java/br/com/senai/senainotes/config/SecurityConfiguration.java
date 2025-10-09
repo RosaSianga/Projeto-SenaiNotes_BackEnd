@@ -3,6 +3,7 @@ package br.com.senai.senainotes.config;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -19,11 +20,44 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+
 import javax.crypto.spec.SecretKeySpec;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+    @Configuration
+    public class SecurityConfig {
+
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+            CorsConfiguration config = new CorsConfiguration();
+
+            // 1. Defina a origem do seu frontend (4200 é o padrão do Angular)
+            config.setAllowedOrigins(List.of("http://localhost:4200"));
+
+            // 2. Defina os métodos HTTP permitidos
+            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+            // 3. Permita todos os cabeçalhos
+            config.setAllowedHeaders(List.of("*"));
+
+            // 4. Permita o envio de credenciais (tokens, cookies)
+            config.setAllowCredentials(true);
+
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            // Aplica as configurações a todas as rotas da API ("/**")
+            source.registerCorsConfiguration("/**", config);
+
+            return  source;
+        }
+
+    }
 
     private String secret = "}]0Gnq|maxtXoU4$KI-,_aL5g5BCmJ]K$/YXlQv7QJtk6d.VD,";
 
@@ -64,16 +98,18 @@ public class SecurityConfiguration {
         http
 
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable())
+                .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/cadastro/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/usuario/**").authenticated()
-                        .requestMatchers("/api/tags/**").authenticated()
-                        .requestMatchers("/api/anotacao/**").authenticated()
-                        .requestMatchers("/api/login/**").authenticated()
+                        .requestMatchers("/api/usuario/**").permitAll()
+                        .requestMatchers("/api/tags/**").permitAll()
+                        .requestMatchers("/api/anotacao/**").permitAll()
+                        .requestMatchers("/api/login/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuario/forgot-password").permitAll()
+
                         .anyRequest().authenticated()
                 )
 

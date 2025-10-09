@@ -1,5 +1,6 @@
 package br.com.senai.senainotes.controller;
 
+import br.com.senai.senainotes.dto.usuario.ResetSenhaDTO;
 import br.com.senai.senainotes.dto.usuario.UsuarioListagemDto;
 import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
@@ -8,6 +9,7 @@ import br.com.senai.senainotes.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -100,6 +102,12 @@ public class UsuarioController {
         }
 
         return ResponseEntity.ok(atualMode);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword (@Valid @RequestBody ResetSenhaDTO resetSenhaDTO) {
+        usuarioService.recuperarSenha(resetSenhaDTO.getEmail());
+        return ResponseEntity.ok("Se um usuário com este e-mail existir, uma nova senha será enviada.");
     }
 
 }

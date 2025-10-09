@@ -97,7 +97,8 @@ public class TagService {
     public AnotacaoListagemEmailDTO converterListagemEmail(Anotacao anotacao) {
         AnotacaoListagemEmailDTO dto = new AnotacaoListagemEmailDTO();
 
-
+        dto.setIdAnotacao(anotacao.getId());
+        dto.setIdUsuario(anotacao.getUsuario().getId());
         dto.setEmail(anotacao.getUsuario().getEmail());
 
         List<TagListagemDTO> tagsDto = anotacao.getTagAnotacao().stream()

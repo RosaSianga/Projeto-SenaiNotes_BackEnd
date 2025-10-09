@@ -5,11 +5,13 @@ import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.repository.UsuarioRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,10 +19,12 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
 
@@ -105,6 +109,16 @@ public class UsuarioService {
 
         modoDark.setFlagDarkMode(dto.getFlagDarkMode());
         return usuarioRepository.save(modoDark);
+    }
+
+    public void recuperarSenha (String email) {
+        usuarioRepository.findByEmail(email).ifPresent(usuario -> {
+            String novaSenha = RandomStringUtils.randomAlphanumeric(10);
+            String senhaCodificada = passwordEncoder.encode(novaSenha);
+            usuario.setSenha(senhaCodificada);
+            usuarioRepository.save(usuario);
+            emailService.enviarEmail(usuario.getEmail(), novaSenha);
+        });
     }
 }
 
