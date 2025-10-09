@@ -5,6 +5,7 @@ import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
 import br.com.senai.senainotes.model.Usuario;
 import br.com.senai.senainotes.repository.UsuarioRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,12 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder1, EmailService emailService) {
         this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = passwordEncoder1;
+        this.emailService = emailService;
     }
 
 
@@ -45,13 +48,13 @@ public class UsuarioService {
         return dto;
     }
 
-    public UsuarioListagemDto buscarUsuarioPorId (Integer id) {
+    public UsuarioListagemDto buscarUsuarioPorId(Integer id) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
         return converterParaListagemDTO(usuario);
     }
 
 
-    public Usuario criarUsuario (LoginDTO dto) {
+    public Usuario criarUsuario(LoginDTO dto) {
 
         String senhaCriptografada = passwordEncoder.encode(dto.getSenha());
         dto.setSenha(senhaCriptografada);
@@ -65,12 +68,12 @@ public class UsuarioService {
     }
 
 
-    public Usuario buscarPorId (Integer id) {
+    public Usuario buscarPorId(Integer id) {
         return usuarioRepository.findById(id).orElse(null);
     }
 
 
-    public Usuario deletarUsurio (Integer id) {
+    public Usuario deletarUsurio(Integer id) {
 
         Usuario usuario = buscarPorId(id);
         if (usuario == null) {
@@ -82,7 +85,7 @@ public class UsuarioService {
     }
 
 
-    public Usuario atualizarUsuario (Integer id, Usuario usuarioNovo) {
+    public Usuario atualizarUsuario(Integer id, Usuario usuarioNovo) {
 
         Usuario usuarioAntigo = buscarPorId(id);
         if (usuarioAntigo == null) {
@@ -96,7 +99,7 @@ public class UsuarioService {
     }
 
 
-    public Usuario alterarDarkMode (Integer id, FlagDarkModeDTO dto) {
+    public Usuario alterarDarkMode(Integer id, FlagDarkModeDTO dto) {
 
         Usuario modoDark = buscarPorId(id);
         if (modoDark == null) {
@@ -105,6 +108,16 @@ public class UsuarioService {
 
         modoDark.setFlagDarkMode(dto.getFlagDarkMode());
         return usuarioRepository.save(modoDark);
+    }
+
+    public void recuperarSenha(String email) {
+        usuarioRepository.findByEmail(email).ifPresent(usuario -> {
+            String novaSenha = RandomStringUtils.randomAlphanumeric(10);
+            String senhaCodificada = passwordEncoder.encode(novaSenha);
+            usuario.setSenha(senhaCodificada);
+            usuarioRepository.save(usuario);
+            emailService.enviarEmail(usuario.getEmail(), novaSenha);
+        });
     }
 }
 

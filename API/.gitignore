@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Arquivo de variáveis de ambiente locais - NUNCA ENVIAR PARA O GIT!
+.env

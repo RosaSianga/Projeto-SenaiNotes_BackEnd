@@ -1,5 +1,6 @@
 package br.com.senai.senainotes.controller;
 
+import br.com.senai.senainotes.dto.reset_senha.ResetSenhaDTO;
 import br.com.senai.senainotes.dto.usuario.UsuarioListagemDto;
 import br.com.senai.senainotes.dto.login.LoginDTO;
 import br.com.senai.senainotes.dto.configuracao.FlagDarkModeDTO;
@@ -29,19 +30,10 @@ public class UsuarioController {
 
 
     // Dto Listar
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<UsuarioListagemDto>> listar() {
         List<UsuarioListagemDto> usuarios = usuarioService.listarTodos();
         return ResponseEntity.ok(usuarios);
-    }
-
-
-    @GetMapping("/listar")
-    @Operation( summary = "Listar todos os usuários do sistema")
-    public ResponseEntity<List<Usuario>> listarUsuarios() {
-
-        List<Usuario> usuario = usuarioService.listarUsuarios();
-        return ResponseEntity.ok(usuario);
     }
 
 
@@ -54,7 +46,7 @@ public class UsuarioController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/listar{id}")
     @Operation( summary = "Pesquisar o usuário por ID")
     public ResponseEntity<?> listarUsuariosPorId (@PathVariable Integer id) {
         UsuarioListagemDto usuarios = usuarioService.buscarUsuarioPorId(id);
@@ -65,7 +57,7 @@ public class UsuarioController {
     }
 
 
-    @DeleteMapping("/deletar")
+    @DeleteMapping("/deletar{id}")
     @Operation( summary = "Deletar o usuário do sistema")
     public ResponseEntity<?> deletarUsuario (@PathVariable Integer id) {
 
@@ -78,7 +70,7 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/atualizar")
+    @PutMapping("/atualizar{id}")
     @Operation( summary = "Atualizar dados do usuário no sistema")
     public ResponseEntity<?> atualizarUsuario (@PathVariable Integer id, @RequestBody Usuario usuarioNovo) {
 
@@ -91,7 +83,7 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/darkmode")
+    @PutMapping("/darkmode{id}")
     @Operation( summary = "Alterar modo de visualização do usuário no sistema (modo escuro)")
     public ResponseEntity<Usuario> alterarDarkMode (@PathVariable Integer id, @RequestBody FlagDarkModeDTO novoDarkMode) {
 
@@ -101,6 +93,13 @@ public class UsuarioController {
         }
 
         return ResponseEntity.ok(atualMode);
+    }
+
+
+    @PostMapping("/resetarsenhar")
+    public ResponseEntity<String> resetarSenha(@Valid @RequestBody ResetSenhaDTO resetarSenha) {
+        usuarioService.recuperarSenha(resetarSenha.getEmail());
+        return ResponseEntity.ok("Se um usuário com este e-mail existir, uma nova senha será enviada.");
     }
 
 }
