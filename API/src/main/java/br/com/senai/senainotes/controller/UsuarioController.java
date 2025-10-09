@@ -48,19 +48,19 @@ public class UsuarioController {
 
     @PostMapping("/cadastrar")
     @Operation( summary = "Cadastrar um usuário no sistema")
-    public ResponseEntity<Usuario> cadastrarUsuario (@RequestBody LoginDTO usuario) {
+    public ResponseEntity<?> cadastrarUsuario (@Valid @RequestBody LoginDTO usuario) {
 
         Usuario usuarioSalvo = usuarioService.criarUsuario(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso!");
     }
 
 
     @GetMapping("/{id}")
     @Operation( summary = "Pesquisar o usuário por ID")
-    public ResponseEntity<UsuarioListagemDto> listarUsuariosPorId (@PathVariable Integer id) {
+    public ResponseEntity<?> listarUsuariosPorId (@PathVariable Integer id) {
         UsuarioListagemDto usuarios = usuarioService.buscarUsuarioPorId(id);
         if (usuarios == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário " + id + " não encontrado !");
         }
         return  ResponseEntity.ok(usuarios);
     }
@@ -72,7 +72,7 @@ public class UsuarioController {
 
         Usuario usuario = usuarioService.deletarUsurio(id);
         if (usuario == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario " + id + " não encontrado !");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário " + id + " não encontrado !");
         }
 
         return ResponseEntity.ok(usuario);
@@ -85,7 +85,7 @@ public class UsuarioController {
 
         Usuario usuarioAntigo = usuarioService.atualizarUsuario(id, usuarioNovo);
         if (usuarioAntigo == null) {
-            return ResponseEntity.status(404).body("Usuario não encontrado !");
+            return ResponseEntity.status(404).body("Usuário não encontrado !");
         }
 
         return ResponseEntity.ok(usuarioAntigo);

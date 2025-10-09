@@ -129,7 +129,7 @@ public class AnotacaoService {
 
         Anotacao anotacao = anotacaoRepository.save(novaAnotacao);
 
-    //Consultar se a Tag existe para recuperar o id ou criar nova
+        //Consultar se a Tag existe para recuperar o id ou criar nova
 
         for (int i = 0; i < dto.getTags().size(); i++) {
 
@@ -152,6 +152,47 @@ public class AnotacaoService {
         return novaAnotacao;
     }
 
+    //Cadastra uma nova anotação
+    public Anotacao cadastrarAnotacaoComImagem(AnotacaoCadastroDTO dto) {
+        Usuario usuarioAssociado = usuarioRepository.findById(dto.getIdUsuario()).orElse(null);
+
+        if (usuarioAssociado == null) {
+            return null;
+        }
+
+        Anotacao novaAnotacao = new Anotacao();
+
+        novaAnotacao.setDataCriacao(OffsetDateTime.now());
+        novaAnotacao.setDataEdicao(OffsetDateTime.now());
+        novaAnotacao.setTitulo(dto.getTitulo());
+        novaAnotacao.setDescricao(dto.getDescricao());
+        novaAnotacao.setUrlImagem(dto.getUrlImagem());
+        novaAnotacao.setUsuario(usuarioAssociado);
+
+        Anotacao anotacao = anotacaoRepository.save(novaAnotacao);
+
+        //Consultar se a Tag existe para recuperar o id ou criar nova
+
+        for (int i = 0; i < dto.getTags().size(); i++) {
+
+            br.com.senai.senainotes.model.Tag tag = tagRepository.findByNome(dto.getTags().get(i));
+            if (tag == null) {
+                Tag novaTag = new Tag();
+                novaTag.setNome(dto.getTags().get(i));
+                tag = tagService.cadastrarTag(novaTag);
+            }
+
+            // cadastrar a tabela itermediaria com o tag.ig e a.id
+            Nota nota = new Nota();
+
+            nota.setIdTag(tag);
+            nota.setIdAnotacao(anotacao);
+
+            notaService.cadastrarNota(nota);
+        }
+
+        return novaAnotacao;
+    }
 
     //Atualiza os dados da anotação
     public Anotacao atualizarAnotacao(Integer id, AnotacaoCadastroDTO anotacao) {
