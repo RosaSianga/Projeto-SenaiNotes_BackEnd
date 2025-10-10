@@ -57,7 +57,7 @@ public class UsuarioController {
     }
 
 
-    @DeleteMapping("/deletar")
+    @DeleteMapping("/deletar/{id}")
     @Operation( summary = "Deletar o usuário do sistema")
     public ResponseEntity<?> deletarUsuario (@PathVariable Integer id) {
 
@@ -70,7 +70,7 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/atualizar")
+    @PutMapping("/atualizar/{id}")
     @Operation( summary = "Atualizar dados do usuário no sistema")
     public ResponseEntity<?> atualizarUsuario (@PathVariable Integer id, @RequestBody Usuario usuarioNovo) {
 
@@ -83,7 +83,7 @@ public class UsuarioController {
     }
 
 
-    @PutMapping("/darkmode")
+    @PutMapping("/darkmode/{id}")
     @Operation( summary = "Alterar modo de visualização do usuário no sistema (modo escuro)")
     public ResponseEntity<Usuario> alterarDarkMode (@PathVariable Integer id, @RequestBody FlagDarkModeDTO novoDarkMode) {
 

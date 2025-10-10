@@ -119,7 +119,7 @@ public class AnotacaoController {
                 .body(arquivo);
     }
 
-    @PutMapping("/arquivarNota/{idAnotacao}")
+    @PutMapping("/arquivarNota/{id}")
     @Operation(
             summary = "Arquiva a nota pelo ID da nota"
     )
@@ -131,7 +131,7 @@ public class AnotacaoController {
         return ResponseEntity.ok(anotacaoExistente);
     }
 
-    @PutMapping("/desarquivarNota/{idAnotacao}")
+    @PutMapping("/desarquivarNota/{id}")
     @Operation(
             summary = "Desarquivar a nota pelo ID da nota"
     )
